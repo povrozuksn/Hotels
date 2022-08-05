@@ -17,6 +17,7 @@ namespace Booking
         public int Rating;
         public string Picture_Andess;
         public PictureBox pb;
+        public Label lbl;
 
         public Hotel(string _Name, string _City, int _Rating, string _Adress)
         {
@@ -26,36 +27,41 @@ namespace Booking
             Picture_Andess = _Adress;
             pb = new PictureBox();
             pb.Load("../../Pictures/" + _Adress);
+            lbl = new Label();
         }
     }
 
     public partial class HotelForm : Form
     {
-        string HotelName;
+        public static string HotelName;
+        public static int Rating;
 
-        public HotelForm(string _HotelName)
+        public HotelForm(Hotel hotel)
         {
             InitializeComponent();
 
-            HotelName = _HotelName;
+            HotelName = hotel.Name;
+            Rating = hotel.Rating;
 
-            if (HotelName == "Гостиница \"Москва\"")
+            pictureBox1.Image = hotel.pb.Image;
+            
+            Text = hotel.Name;
+            label1.Text = hotel.Name;
+
+            //Рисование звезд
+            int x = 396;
+            for(int i=0; i<hotel.Rating; i++)
             {
-                pictureBox1.Load("../../Pictures/Moskva.jpeg");
+                PictureBox box = new PictureBox();
+                box.Load("../../Pictures/star.png");
+                box.Location = new Point(x, 53);
+                box.Size = new Size(30, 30);
+                box.SizeMode = PictureBoxSizeMode.Zoom;                
+                InfoPanel.Controls.Add(box);
+
+                x += 35;
             }
 
-            if (HotelName == "Гостиница \"Националь\"")
-            {
-                pictureBox1.Load("../../Pictures/Nacional.jpeg");
-            }
-
-            if (HotelName == "Гостиница \"Апарт\"")
-            {
-                pictureBox1.Load("../../Pictures/Apart.jpeg");
-            }
-
-            Text = HotelName;
-            label1.Text = HotelName;
         }
 
         private void HotelForm_Load(object sender, EventArgs e)
@@ -66,14 +72,14 @@ namespace Booking
         private void pictureBox5_Click(object sender, EventArgs e)
         {
             PictureBox pb = (PictureBox)sender;
-            RoomForm rf = new RoomForm(HotelName, pb.Tag.ToString());
+            RoomForm rf = new RoomForm(HotelName, pb.Tag.ToString(), Rating);
             rf.Show();
         }
 
         private void label3_Click(object sender, EventArgs e)
         {
             Label pb = (Label)sender;
-            RoomForm rf = new RoomForm(HotelName, pb.Text);
+            RoomForm rf = new RoomForm(HotelName, pb.Text, Rating);
             rf.Show();
         }
     }

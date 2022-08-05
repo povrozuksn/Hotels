@@ -13,7 +13,7 @@ namespace Booking
     public partial class MainForm : System.Windows.Forms.Form
     {
 
-        List<Hotel> hotels = new List<Hotel>();
+        public static List<Hotel> hotels = new List<Hotel>();
 
         public MainForm()
         {
@@ -31,22 +31,20 @@ namespace Booking
             int x = 17;
             foreach (Hotel hotel in hotels)
             {
-                PictureBox box = new PictureBox();
-                box.Location = new Point(x, 20);
-                box.Size = new Size(180, 90);
-                box.Image = hotel.pb.Image;
-                box.SizeMode=PictureBoxSizeMode.Zoom;
-                box.Tag = hotel.Name;
-                box.Click += new EventHandler(pictureBox3_Click);
-                HotelsPanel.Controls.Add(box);
+                hotel.pb.Location = new Point(x, 20);
+                hotel.pb.Size = new Size(180, 90);
+                hotel.pb.Image = hotel.pb.Image;
+                hotel.pb.SizeMode=PictureBoxSizeMode.Zoom;
+                hotel.pb.Tag = hotel.Name;
+                hotel.pb.Click += new EventHandler(pictureBox3_Click);
+                HotelsPanel.Controls.Add(hotel.pb);
 
-                Label label = new Label();
-                label.Location = new Point(x, 120);
-                label.Size = new Size(200, 20);
-                label.Font = new Font("Microsoft Sans Serif", 12);
-                label.Text = hotel.Name;
-                label.Click += new EventHandler(label6_Click);
-                HotelsPanel.Controls.Add(label);
+                hotel.lbl.Location = new Point(x, 120);
+                hotel.lbl.Size = new Size(200, 20);
+                hotel.lbl.Font = new Font("Microsoft Sans Serif", 12);
+                hotel.lbl.Text = hotel.Name;
+                hotel.lbl.Click += new EventHandler(label6_Click);
+                HotelsPanel.Controls.Add(hotel.lbl);
 
                 x += 200;
             }
@@ -74,15 +72,46 @@ namespace Booking
         private void pictureBox3_Click(object sender, EventArgs e)
         {
            PictureBox pb = (PictureBox)sender;
-           HotelForm hf = new HotelForm(pb.Tag.ToString());
-           hf.Show();
+
+            foreach(Hotel hotel in hotels)
+            {
+                if(hotel.pb.Image == pb.Image)
+                {
+                    HotelForm hf = new HotelForm(hotel);
+                    hf.Show();
+                }
+            }
+           
         }
 
         private void label6_Click(object sender, EventArgs e)
         {
             Label pb = (Label)sender;
-            HotelForm hf = new HotelForm(pb.Text);
-            hf.Show();
+            foreach (Hotel hotel in hotels)
+            {
+                if (hotel.Name == pb.Text)
+                {
+                    HotelForm hf = new HotelForm(hotel);
+                    hf.Show();
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
+            foreach (Hotel hotel in hotels)
+            {
+                bool Visible = true;
+                if (CytiComboBox.Text != "" && CytiComboBox.Text != hotel.City)
+                {
+                    Visible = false;
+                }
+               
+                hotel.pb.Visible = Visible;
+                hotel.lbl.Visible = Visible;
+
+            }
         }
     }
 }
